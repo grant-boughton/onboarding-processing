@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+}
+
+group 'io.nuvalence.onboarding.lambda'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.amazonaws:aws-lambda-java-core:1.1.0'
+    compile 'com.amazonaws:aws-lambda-java-events:2.2.7'
+    compile 'com.amazonaws:aws-java-sdk-lambda:1.11.717'
+    compile 'com.amazonaws:aws-java-sdk-dynamodb:1.11.634'
+    compile 'com.amazonaws:aws-java-sdk-textract:1.11.715'
+    compile 'com.amazonaws:aws-java-sdk-sns:1.11.717'
+    compile 'com.amazonaws:aws-java-sdk-cognitoidp:1.11.717'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '3.1.0'
+}
+
+task buildZip(type: Zip) {
+    from compileJava         // include the compiled source code
+    from processResources    // include any resources
+    into('lib') {            // in a lib folder at the root of the archive, include all runtime dependencies
+        from configurations.runtimeClasspath
+    }
+}
+assemble.dependsOn(buildZip)
